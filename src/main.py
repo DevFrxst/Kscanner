@@ -6,9 +6,15 @@ from colorama import *
 import platform
 import nmap
 
+try:
+    create_folder = open("log.txt", x)
+except:
+    pass
+
 ##################################################################
 ##################################################################
 
+file_name = "log.txt"
 nm = nmap.PortScanner()
 puertos_abiertos="-p "
 count=0
@@ -49,13 +55,20 @@ def escanear():
 	    print(f"{white}[+] {cyan}Protocol:{verde}"+" %s\n" % proto)
 	    lport = nm[host][proto].keys()
 	    sorted(lport)
+	    f = open(file_name, "a")
+	    f.write(f"[+] {host}\n")
+	    f.close()
+	    
 	    for port in lport:
-		    print(f"{white}[+] {cyan}port: {verde}"+"%s" % port +f"\t{cyan}state:{verde}"+" %s" % nm[host][proto][port]["state"])
-		    if count==0:
-			    puertos_abiertos=puertos_abiertos+str(port)
-			    count=1
-		    else:
-			    puertos_abiertos=puertos_abiertos+","+str(port)
+	        f = open(file_name, "a")
+	        f.write(" [-] port: %s" % port +" state: %s" % nm[host][proto][port]["state"] +"\n")
+	        f.close()
+	        print(f"{white}[+] {cyan}port: {verde}"+"%s" % port +f"{cyan} state:{verde}"+" %s" % nm[host][proto][port]["state"])
+	        if count==0:
+	            puertos_abiertos=puertos_abiertos+str(port)
+	            count=1
+	        else:
+	            puertos_abiertos=puertos_abiertos+","+str(port)
 
 if __name__ == "__main__":
     print(banner+info)
